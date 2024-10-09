@@ -375,13 +375,13 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
                 setQues(tempQues);
                 onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question, viewQue: viewQues });
                 // console.log("Questions:", viewQues);
+                handleSubmit();
+                // setTimeout(() => {setLoading(false); handleSubmit();}, 2000);
             }
         ).catch((error: any) => {
             console.log("Error occured: ", error);
             setLoading(false);
         })
-
-        setTimeout(() => {setLoading(false); handleSubmit();}, 2000);
         // handleSubmit();
     };
 
