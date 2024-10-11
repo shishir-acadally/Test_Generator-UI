@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import topics from "../Data/allTopicData";
 import { getGrades, getSubjects, getChapters, getTopics, getDBQuestions, generateQues } from '../httpservice';
 import { SyncLoader } from 'react-spinners';
 import Swal from 'sweetalert2'
@@ -70,9 +71,9 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
     // const [displayDrops, setDisplayDrops] = useState('');
 
     const [QueCount, setQuesCount] = useState("");
-    const [grades, setGrades] = useState([]);
-    const [subjects, setSubjects] = useState([]);
-    const [chapters, setChapters] = useState([]);
+    const [grades, setGrades] = useState<string[]>([]);
+    const [subjects, setSubjects] = useState<string[]>([]);
+    const [chapters, setChapters] = useState<string[]>([]);
     const [lus, setLus] = useState<{ id: string; name: string; }[]>([]);
     const [selectedLU, setSelectedLU] = useState("");
     const blooms = ["Remember", "Understand"];
@@ -118,44 +119,67 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
         return uniqueArr;
     };
 
+    useEffect(() => {
+        fetchGrades();
+
+    }, []);
 
     useEffect(() => {
         localStorage.setItem('view', JSON.stringify(clickedOnView));
     }, [clickedOnView]);
 
-    useEffect(() => {
-        const items = localStorage.getItem('view');
-        if (items) {
-            setClickedOnView(JSON.parse(items));
-        };
-        console.log("LU ============= ", lu);
-    }, []);
+    // useEffect(() => {
+    //     const items = localStorage.getItem('view');
+    //     if (items) {
+    //         setClickedOnView(JSON.parse(items));
+    //     };
+    //     console.log("LU ============= ", lu);
+    // }, []);
 
     useEffect(() => {
-        getSubjects(grade)
-            .then((data: any) => {
-                // console.log("Subjects: ", data);
-                setSubjects(removeDups(data.subjects));
+        // getSubjects(grade)
+        //     .then((data: any) => {
+        //         // console.log("Subjects: ", data);
+        //         setSubjects(removeDups(data.subjects));
 
-                onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
-            })
-            .catch((error: any) => console.error('Error fetching subjects:', error));
+        //         onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
+        //     })
+            // .catch((error: any) => console.error('Error fetching subjects:', error));
+
+        let tempSubjects = []
+        for(let i = 0; i<topics.length; i++){
+            if(topics[i]["grade"] === grade){
+                tempSubjects.push(topics[i]["subject"]);
+                
+            }
+        }
+        setSubjects(tempSubjects);
     }, [grade]);
 
     useEffect(() => {
-        getChapters(grade, subject)
-            .then((data: any) => {
-                // console.log("Chapters: ", data);
-                let chaps = removeDups(data.chapters);
-                // console.log(chaps);
-                setChapters(chaps);
-                // setBlooms(["Remember", "Understand", "Apply", "Analyse"]);
+        // getChapters(grade, subject)
+        //     .then((data: any) => {
+        //         // console.log("Chapters: ", data);
+        //         let chaps = removeDups(data.chapters);
+        //         // console.log(chaps);
+        //         setChapters(chaps);
+        //         // setBlooms(["Remember", "Understand", "Apply", "Analyse"]);
 
-                // setQues([]);
-                // setviewQues([]);
-                onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
-            })
-            .catch((error: any) => console.error('Error fetching chapters:', error));
+        //         // setQues([]);
+        //         // setviewQues([]);
+        //         onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
+        //     })
+        //     .catch((error: any) => console.error('Error fetching chapters:', error));
+
+        let tempChapters = []
+        for(let i = 0; i<topics.length; i++){
+            if(topics[i]["grade"] === grade){
+                for(let j = 0; j<topics[i]["chapters"].length; j++){
+                    tempChapters.push(topics[i]["chapters"][j]["name"]);
+                }
+            }
+        }
+        setChapters(tempChapters)
     }, [subject]);
 
     useEffect(() => {
@@ -176,6 +200,18 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
                 // console.log("LUs: ", data.learning_units);
             })
             .catch((error: any) => console.error('Error fetching LUs:', error));
+
+        // let tempTopics = []
+        // for(let i = 0; i<topics.length; i++){
+        //     if(topics[i]["grade"] === grade && topics[i]["subject"] === subject){
+        //         for(let j = 0; j<topics[i]["chapters"].length; j++){
+        //             if(topics[i]["chapters"][j]["name"] == chapter){
+        //                 tempTopics = topics[i]["chapters"][j]["topics"];
+        //             }
+        //         }
+        //     }
+        // }
+        // setLus(tempTopics);
     }, [chapter]);
 
     let luChanged: boolean = false;
@@ -203,10 +239,7 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
     useEffect(() => { console.log("Updated ViewQues: ", viewQues) }, [viewQues]);
     // useEffect(() => {  },[lus]);
 
-    useEffect(() => {
-        fetchGrades();
-
-    }, []);
+    
 
     // useEffect(() => {
     //     // Any side effect that depends on props, e.g., re-fetch data if props change
@@ -223,21 +256,29 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
     // }, [grade, subject, chapter, lu, bloom, question, viewQue, onUpdateState]);
 
     const fetchGrades = () => {
-        getGrades()
-            .then((data: any) => {
-                // console.log("Grades: ", data);
-                let grades = data.grades.sort((n1: string, n2: string) => {
-                    if (n1 > n2) {
-                        return 1;
-                    }
-                    if (n1 < n2) {
-                        return -1;
-                    }
-                    return 0;
-                });
-                setGrades(data.grades);
-            })
-            .catch((error: any) => console.error('Error fetching grades:', error));
+        // getGrades()
+        //     .then((data: any) => {
+        //         // console.log("Grades: ", data);
+        //         let grades = data.grades.sort((n1: string, n2: string) => {
+        //             if (n1 > n2) {
+        //                 return 1;
+        //             }
+        //             if (n1 < n2) {
+        //                 return -1;
+        //             }
+        //             return 0;
+        //         });
+        //         setGrades(data.grades);
+        //     })
+        //     .catch((error: any) => console.error('Error fetching grades:', error));
+        let temp:string[] = [];
+        for(let i=0; i<topics.length; i++){
+            if (temp.includes(topics[i]["grade"]) == false){
+                temp.push(topics[i]["grade"]);
+            }
+        }
+        setGrades(temp);
+        console.log("Grades: ", grades);
     };
 
     const fetchSubjects = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -354,8 +395,8 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
     const generateQuestions = () => {
         setLoading(true);
 
-        console.log("Provided Topic for generation..............", selectedLU);
-        generateQues(count, selectedLU, grade, subject, chapter, bloom).then(
+        console.log("Provided Topic for generation..............", selectedLU?selectedLU:lu);
+        generateQues(count, selectedLU?selectedLU:lu, grade, subject, chapter, bloom).then(
             (data: any) => {
                 setLoading(false);
                 // console.log("Generated Ques ==============> ", data.data);
@@ -416,7 +457,7 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
                 <div className="col-md-10 d-flex justify-content-center py-2 mt-4">
                     <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '150px' }} value={grade} onChange={fetchSubjects} >
                         <option value="" disabled >Pick a grade</option>
-                        {grades.map((grade_list, index) => (
+                        {[...grades].map((grade_list, index) => (
                             <option key={index}>{grade_list ? grade_list : grade}</option>
                         ))}
                     </select>
