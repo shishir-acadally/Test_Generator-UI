@@ -173,7 +173,7 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
 
         let tempChapters = []
         for(let i = 0; i<topics.length; i++){
-            if(topics[i]["grade"] === grade){
+            if((topics[i]["grade"] === grade) && (topics[i]["subject"] === subject)){
                 for(let j = 0; j<topics[i]["chapters"].length; j++){
                     tempChapters.push(topics[i]["chapters"][j]["name"]);
                 }
