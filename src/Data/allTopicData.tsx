@@ -974,7 +974,7 @@ const topics = [
   },
   {
     "grade": "9",
-    "subject": "Science",
+    "subject": "Chemistry",
     "chapters": [
       {
         "name": "Matter in Our Surroundings",
@@ -1020,6 +1020,12 @@ const topics = [
           "Atomic and Mass Number "
         ]
       },
+    ]
+  },
+  {
+    "grade": "9",
+    "subject": "Biology",
+    "chapters": [
       {
         "name": "The Fundamental Unit of Life",
         "topics": [
@@ -1046,6 +1052,26 @@ const topics = [
           "Muscular tissues and Neuron"
         ]
       },
+      {
+        "name": "Improvement in Food Resources",
+        "topics": [
+          "Need  of Better Crops",
+          "Nutrient management for Crops",
+          "Concept of organic faming and cropping patterns",
+          "Irrigation practices ",
+          "Crop protection strategies",
+          "Animal husbandry",
+          "An overview of Poultry Farming",
+          "Fish Farming and  Marine fish Production",
+          "Inland Fish Production and Bee-keeping"
+        ]
+      }
+    ]
+  },
+  {
+    "grade": "9",
+    "subject": "Physics",
+    "chapters": [
       {
         "name": "Motion ",
         "topics": [
@@ -1097,20 +1123,6 @@ const topics = [
           "Exploring Characteristics of Sound Wave ",
           "Reflection of Sound Wave ",
           "Ultrasound and Infrasound"
-        ]
-      },
-      {
-        "name": "Improvement in Food Resources",
-        "topics": [
-          "Need  of Better Crops",
-          "Nutrient management for Crops",
-          "Concept of organic faming and cropping patterns",
-          "Irrigation practices ",
-          "Crop protection strategies",
-          "Animal husbandry",
-          "An overview of Poultry Farming",
-          "Fish Farming and  Marine fish Production",
-          "Inland Fish Production and Bee-keeping"
         ]
       }
     ]
