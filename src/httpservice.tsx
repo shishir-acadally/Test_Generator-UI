@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const get_API_URL = 'https://leap-uat.acadally.com/learning_units';
-// const Ques_API_URL = 'https://test-generator-backend.onrender.com';
-const Ques_API_URL = 'http://127.0.0.1:8000'
+const Ques_API_URL = 'https://test-generator-backend.onrender.com';
+// const Ques_API_URL = 'http://127.0.0.1:8000'
 const API_TOKEN = '698a2fc38522a684193eb0af8b44f1c4';
 
 // Function to fetch grades
