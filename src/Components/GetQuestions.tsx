@@ -353,11 +353,11 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
     }
 
     const handleSubmit = () => {
-        console.log("=============== Inside handle submit =====================");
-        if (questions.length === 0 && isDisabled === false) {
+        // console.log("=============== Inside handle submit =====================");
+        if (isDisabled === false) {
             setLoading(true);
         }
-        setTimeout(() => { }, 3000);
+        // setTimeout(() => { }, 2000);
         getDBQuestions(selectedLU ? selectedLU : lu)
             .then((data: any) => {
                 console.log("Questions: ", data);
@@ -476,7 +476,7 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
                 </div>
             )}
 
-            <div style={{ position: 'relative', zIndex: 0, filter: loading ? 'blur(5px)' : 'none', }}>
+            <div className={loading? "popupopen": ""} style={{ position: 'relative', zIndex: 0, filter: loading ? 'blur(5px)' : 'none', }}>
                 <div className="col-md-12 mt-5">
                     <h2 className="text-center">
                         Please select

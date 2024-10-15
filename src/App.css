@@ -91,3 +91,7 @@
   opacity: 1; /* Show the icon on hover */
 }
 
+.popupopen{
+  pointer-events: none;
+}
+
