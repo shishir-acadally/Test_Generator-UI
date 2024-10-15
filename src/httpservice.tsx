@@ -5,26 +5,6 @@ const Ques_API_URL = 'https://test-generator-backend.onrender.com';
 // const Ques_API_URL = 'http://127.0.0.1:8000'
 const API_TOKEN = '698a2fc38522a684193eb0af8b44f1c4';
 
-// Function to fetch grades
-export const getGrades = () => {
-  const url = `${get_API_URL}?token=${API_TOKEN}`;
-  return axios.get(url).then(response => response.data);
-};
-
-// Function to fetch subjects based on grade
-export const getSubjects = (grade: any) => {
-  const url = `${get_API_URL}?grade=${grade}&token=${API_TOKEN}`;
-  // console.log(url);
-  return axios.get(url).then(response => response.data);
-};
-
-// Function to fetch chapters based on grade and subject
-export const getChapters = (grade: any, subject: any) => {
-  const url = `${get_API_URL}?grade=${grade}&subject=${subject}&token=${API_TOKEN}`;
-  // console.log(url);
-  return axios.get(url).then(response => response.data);
-};
-
 // Function to fetch learning units based on grade, subject, and chapter
 export const getTopics = (grade: string, subject: string, chapter: string) => {
   const requestBody = {"grade": grade, "subject": subject, "chapter": chapter};

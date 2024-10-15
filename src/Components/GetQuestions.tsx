@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import topics from "../Data/allTopicData";
-import { getGrades, getSubjects, getChapters, getTopics, getDBQuestions, generateQues } from '../httpservice';
+import { getTopics, getDBQuestions, generateQues } from '../httpservice';
 import { SyncLoader } from 'react-spinners';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -58,7 +58,7 @@ interface Props {
 }
 
 
-const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_name, bloom, question, viewQue, onUpdateState, onUpdateClickedOnView }) => {
+const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_name, bloom, question, viewQue, onUpdateState, onUpdateClickedOnView }) => {
     const override: React.CSSProperties = {
         display: "block",
         margin: "0 auto",
@@ -70,7 +70,6 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
 
     // const [displayDrops, setDisplayDrops] = useState('');
 
-    const [QueCount, setQuesCount] = useState("");
     const [grades, setGrades] = useState<string[]>([]);
     const [subjects, setSubjects] = useState<string[]>([]);
     const [chapters, setChapters] = useState<string[]>([]);
@@ -144,16 +143,39 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
 
         //         onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
         //     })
-            // .catch((error: any) => console.error('Error fetching subjects:', error));
+        // .catch((error: any) => console.error('Error fetching subjects:', error));
 
-        let tempSubjects = []
-        for(let i = 0; i<topics.length; i++){
-            if(topics[i]["grade"] === grade){
-                tempSubjects.push(topics[i]["subject"]);
-                
+
+        if (subject === '') {
+            let tempSubjects = []
+            for (let i = 0; i < topics.length; i++) {
+                if (topics[i]["grade"] === grade) {
+                    tempSubjects.push(topics[i]["subject"]);
+
+                }
             }
+            setSubjects(tempSubjects);
         }
-        setSubjects(tempSubjects);
+        else {
+            let tempSubjects = []
+            for (let i = 0; i < topics.length; i++) {
+                if (topics[i]["grade"] === grade) {
+                    tempSubjects.push(topics[i]["subject"]);
+
+                }
+            }
+            setSubjects(tempSubjects);
+
+            let tempChapters = []
+            for (let i = 0; i < topics.length; i++) {
+                if ((topics[i]["grade"] === grade) && (topics[i]["subject"] === subject)) {
+                    for (let j = 0; j < topics[i]["chapters"].length; j++) {
+                        tempChapters.push(topics[i]["chapters"][j]["name"]);
+                    }
+                }
+            }
+            setChapters(tempChapters)
+        }
     }, [grade]);
 
     useEffect(() => {
@@ -172,9 +194,9 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
         //     .catch((error: any) => console.error('Error fetching chapters:', error));
 
         let tempChapters = []
-        for(let i = 0; i<topics.length; i++){
-            if((topics[i]["grade"] === grade) && (topics[i]["subject"] === subject)){
-                for(let j = 0; j<topics[i]["chapters"].length; j++){
+        for (let i = 0; i < topics.length; i++) {
+            if ((topics[i]["grade"] === grade) && (topics[i]["subject"] === subject)) {
+                for (let j = 0; j < topics[i]["chapters"].length; j++) {
                     tempChapters.push(topics[i]["chapters"][j]["name"]);
                 }
             }
@@ -183,23 +205,31 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
     }, [subject]);
 
     useEffect(() => {
-        getTopics(grade, subject, chapter)
-            .then((data: any) => {
-                console.log("Topics: ", data);
-                let temp = [];
-                for (let det of data.data) {
-                    temp.push({ id: det.topic_id, name: det.topic_name });
-                }
-                setLus(temp);
-                // setBlooms(["Remember", "Understand", "Apply", "Analyse"]);
+        if (chapter !== '') {
+            setLoading(true);
+            getTopics(grade, subject, chapter)
+                .then((data: any) => {
+                    setLoading(false);
+                    console.log("Topics: ", data);
+                    let temp = [];
+                    for (let det of data.data) {
+                        temp.push({ id: det.topic_id, name: det.topic_name });
+                    }
+                    setLus(temp);
+                    // setBlooms(["Remember", "Understand", "Apply", "Analyse"]);
 
-                if (questions.length === 0) { handleSubmit(); }
-                // setQues([]);
-                // setviewQues([]);
-                onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
-                // console.log("LUs: ", data.learning_units);
-            })
-            .catch((error: any) => console.error('Error fetching LUs:', error));
+                    if (questions.length === 0) { handleSubmit(); }
+                    // setQues([]);
+                    // setviewQues([]);
+                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
+                    // console.log("LUs: ", data.learning_units);
+                })
+                .catch((error: any) => {
+                    setLoading(false);
+                    console.error('Error fetching LUs:', error)
+                });
+
+        }
 
         // let tempTopics = []
         // for(let i = 0; i<topics.length; i++){
@@ -214,9 +244,6 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
         // setLus(tempTopics);
     }, [chapter]);
 
-    let luChanged: boolean = false;
-    useEffect(() => { console.log(lu); }, [lu]);
-    useEffect(() => { }, [questions]);
     useEffect(() => {
         setQues(question);
 
@@ -235,25 +262,17 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
         // console.log("Extracted ViewQues: ", tempViewQues);
         setviewQues(tempViewQues);
     }, [question]);
+
     useEffect(() => { console.log(blooms); }, [blooms]);
+
     useEffect(() => { console.log("Updated ViewQues: ", viewQues) }, [viewQues]);
-    // useEffect(() => {  },[lus]);
 
-    
 
-    // useEffect(() => {
-    //     // Any side effect that depends on props, e.g., re-fetch data if props change
-    //     onUpdateState({
-    //         grade,
-    //         subject,
-    //         chapter,
-    //         lu,
-    //         lu_name,
-    //         bloom,
-    //         question,
-    //         viewQue,
-    //     });
-    // }, [grade, subject, chapter, lu, bloom, question, viewQue, onUpdateState]);
+
+    useEffect(() => {
+        // Any side effect that depends on props, e.g., re-fetch data if props change
+        console.log("Updated values in App.tsx: ", onUpdateState);
+    }, [onUpdateState]);
 
     const fetchGrades = () => {
         // getGrades()
@@ -271,9 +290,9 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
         //         setGrades(data.grades);
         //     })
         //     .catch((error: any) => console.error('Error fetching grades:', error));
-        let temp:string[] = [];
-        for(let i=0; i<topics.length; i++){
-            if (temp.includes(topics[i]["grade"]) == false){
+        let temp: string[] = [];
+        for (let i = 0; i < topics.length; i++) {
+            if (temp.includes(topics[i]["grade"]) == false) {
                 temp.push(topics[i]["grade"]);
             }
         }
@@ -283,12 +302,12 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
 
     const fetchSubjects = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedGrade = event.target.value;
-        onUpdateState({count, grade: selectedGrade, subject, chapter, lu, lu_name, bloom, question, viewQue });
+        onUpdateState({ count, grade: selectedGrade, subject, chapter, lu, lu_name, bloom, question, viewQue });
     };
 
     const fetchChapters = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedSubject = event.target.value;
-        onUpdateState({count, grade, subject: selectedSubject, chapter, lu, lu_name, bloom, question, viewQue });
+        onUpdateState({ count, grade, subject: selectedSubject, chapter, lu, lu_name, bloom, question, viewQue });
     };
 
     const setLUID = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -304,9 +323,9 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
         // setQues([]);
         // setviewQues([]);
         // console.log("final print .................");
-        luChanged = true;
-        onUpdateState({count, grade, subject, chapter, lu: tempLU, lu_name: tempLU_name, bloom, question: questions, viewQue: viewQues });
-        if (bloom !== ""){
+        onUpdateState({ count, grade, subject, chapter, lu: tempLU, lu_name: tempLU_name, bloom, question: questions, viewQue: viewQues });
+        if (bloom !== "") {
+            console.log("========================= Blooms: ", bloom);
             setIsDisabled(false);
         }
         // getLearningOutcomes(tempLU);
@@ -317,22 +336,24 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
 
     const fetchLUs = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedChapter = event.target.value;
-        onUpdateState({count, grade, subject, chapter: selectedChapter, lu, lu_name, bloom, question, viewQue });
+        // setSubjecttest(selectedChapter);
+        onUpdateState({ count, grade, subject, chapter: selectedChapter, lu, lu_name, bloom, question, viewQue });
     };
 
     const setBloomLevel = (event: any) => {
         const selectedBloom = event.target.value;
         // console.log("Selected Blooms Level: ", selectedBloom);
-        onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom: selectedBloom, question: questions, viewQue: viewQues });
+        onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom: selectedBloom, question: questions, viewQue: viewQues });
         setIsDisabled(false);
     };
 
     const setCount = (event: any) => {
         const countValue = event.target.value;
-        onUpdateState({count: countValue, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue})
+        onUpdateState({ count: countValue, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue })
     }
 
     const handleSubmit = () => {
+        console.log("=============== Inside handle submit =====================");
         if (questions.length === 0 && isDisabled === false) {
             setLoading(true);
         }
@@ -355,11 +376,11 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
                     }
                     setQues([]);
                     setviewQues([]);
-                    onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
+                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
                 } else {
                     setQues(data.data);
                     console.log("After setting questions: ", data.data);
-                    onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question: data.data, viewQue });
+                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom, question: data.data, viewQue });
                     let tempViewQUes = [];
                     let tempQues = [];
                     for (let que_det of data.data) {
@@ -384,7 +405,7 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
                     // temp1.push({ 'question': data.data[0].Question })
                     setviewQues(tempViewQUes);
                     setQues(tempQues);
-                    onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question, viewQue: viewQues });
+                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom, question, viewQue: viewQues });
                     setIsGenerateDisabled(false);
                     // console.log("Questions:", viewQues);
                 }
@@ -395,14 +416,14 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
     const generateQuestions = () => {
         setLoading(true);
 
-        console.log("Provided Topic for generation..............", selectedLU?selectedLU:lu);
-        generateQues(count, selectedLU?selectedLU:lu, grade, subject, chapter, bloom).then(
+        console.log("Provided Topic for generation..............", selectedLU ? selectedLU : lu);
+        generateQues(count, selectedLU ? selectedLU : lu, grade, subject, chapter, bloom).then(
             (data: any) => {
                 setLoading(false);
                 // console.log("Generated Ques ==============> ", data.data);
 
                 // setQues(data.data);
-                onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question: data.data, viewQue });
+                onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom, question: data.data, viewQue });
                 let tempViewQUes = [];
                 let tempQues = [];
                 for (let que_det of data.data) {
@@ -414,7 +435,7 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
                 // temp1.push({ 'question': data.data[0].Question })
                 setviewQues(tempViewQUes);
                 setQues(tempQues);
-                onUpdateState({count, grade, subject, chapter, lu, lu_name, bloom, question, viewQue: viewQues });
+                onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom, question, viewQue: viewQues });
                 // console.log("Questions:", viewQues);
                 handleSubmit();
                 // setTimeout(() => {setLoading(false); handleSubmit();}, 2000);
@@ -440,130 +461,9 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
     // }
 
     return (
-        <div>
-            <div className="col-md-12 mt-5">
-                <h2 className="text-center">
-                    Please select
-                    <span className="fw-bold"> Grade</span>,
-                    <span className="fw-bold"> Subject</span>,
-                    <span className="fw-bold"> Chapter </span>, and
-                    other details
-                    to generate MCQs
-                </h2>
-            </div>
-
-            <div className="row mb-2">
-                <div className="col-md-1"></div>
-                <div className="col-md-10 d-flex justify-content-center py-2 mt-4">
-                    <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '150px' }} value={grade} onChange={fetchSubjects} >
-                        <option value="" disabled >Pick a grade</option>
-                        {[...grades].map((grade_list, index) => (
-                            <option key={index}>{grade_list ? grade_list : grade}</option>
-                        ))}
-                    </select>
-
-                    <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '260px' }} value={subject} onChange={fetchChapters} >
-                        <option value="" disabled >Pick one of the given subjects</option>
-                        {subjects.map((subject_list, index) => (
-                            <option key={index}>{subject_list ? subject_list : subject}</option>
-                        ))}
-                    </select>
-
-                    <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '252px' }} value={chapter} onChange={fetchLUs} >
-                        <option value="" disabled >Pick from the given chapters</option>
-                        {chapters.map((chapter_list, index) => (
-                            <option key={index}>{chapter_list ? chapter_list : chapter}</option>
-                        ))}
-                    </select>
-
-                    <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '235px' }} value={lu} onChange={setLUID} >
-                        <option value="" disabled>Pick from the given Topics</option>
-                        {lus.map((lu, index) => (
-                            <option key={index} value={lu.id}>
-                                {lu.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className="col-md-1"></div>
-            </div>
-            <div className="row mt-1">
-                <div className="col-md-1"></div>
-                <div className="col-md-10 d-flex justify-content-center">
-                    <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '250px' }} value={bloom} onChange={setBloomLevel} >
-                        <option value="" disabled >Pick from the given Bloom's Levels</option>
-                        {blooms.map((bloom, index) => (
-                            <option key={index} value={bloom}>{bloom}</option>
-                        ))}
-                    </select>
-
-                    <input className="btn border border-primary mx-3" style={{ maxWidth: '260px' }} placeholder="Questions to generate (1 - 10)" value={count} type="text" name="count" id="count"  onChange={setCount}/>
-                </div>
-                <div className="col-md-1"></div>
-            </div>
-
-            {/* <div className="row mt-4">
-                <div className="col-md-5"> <hr /> </div>
-                <div className="col-md-2">
-                    <h3 className="text-center">OR</h3>
-                </div>
-                <div className="com-md-5"> <hr /> </div>
-            </div> */}
-
-            {/* <div className="row d-flex justify-content-center mt-4">
-                <label htmlFor="qID" style={{maxWidth: '265px'}}> <p className="fw-bold m-0 p-0">Question ID</p>
-                    <input className="form-control" type="text" name="qID" id="qID" placeholder="Enter thge 'Question ID' Here" />
-                </label>
-            </div> */}
-
-            <div className="row d-flex justify-content-center mt-3">
-                <button type="button" className="btn btn-primary me-3" style={{ width: '125px' }} disabled={isDisabled} onClick={handleSubmit}>
-                    Submit
-                </button>
-                <button className="btn btn-primary btn-sm float-end ms-2" style={{ width: '125px' }} disabled={isGenerateDisabled} onClick={generateQuestions}>
-                    GENERATE
-                </button>
-                {/* <button className="btn btn-primary btn-sm float-end ms-2" style={{ width: '125px' }} disabled={isGenerateDisabled || showIt} onClick={generateQuestions}>
-                    GENERATE
-                </button> */}
-            </div>
-
-
-            <div className="row mt-4 d-flex">
-                {/* <div className="radio"> */}
-
-                {/* </div> */}
-                {/* <input type="radio" name="typeOfQuestionsBasedOnReview" id="typeOfQuestionsBased" value={"not_reviewed"} />
-                <label htmlFor="typeOfQuestionsBasedOnReview">HTML</label> */}
-                {/* <label className="d-inline-flex">
-                    <input type="radio" value="not_reviewed" checked={selectedOption === "not_reviewed"} onChange={handleOptionChange}/>
-                    For Review
-                </label>
-                <label className="d-inline-flex">
-                    <input type="radio" value="accepted" checked={selectedOption === "accepted"} onChange={handleOptionChange} />
-                    Accepted
-                </label>  */}
-            </div>
-            <div className="row mt-3 d-flex justify-content-center">
-                <div className="col-md-10 mb-2" style={{ backgroundColor: '#f9f9f9' }}>
-                    Questions for Topic: &nbsp; <strong> {lu_name} </strong>
-                    <hr />
-                    {viewQues.map((question, index) => (
-                        <div className="row" key={index}>
-                            {/* Questions for LU: <strong> {lu} </strong> */}
-                            <div className="col-md-12 my-2">
-                                Que {index + 1}: &nbsp; {question.question} &nbsp; &nbsp;
-                                <button className="btn btn-primary btn-sm float-end" value={index} onClick={() => viewQuestion(index)}>
-                                    VIEW
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <div className="row mt-5 mb-5 d-flex justify-content-center">
-                <div className=" sweet-loading d-flex justify-content-center">
+        <div className="col-lg-12">
+            {loading && (
+                <div className=" sweet-loading" style={{ position: 'absolute', zIndex: '1', top: '50%', right: '50%' }}>
                     <SyncLoader
                         color={"black"}
                         loading={loading}
@@ -574,6 +474,130 @@ const GetQuesPage: React.FC<Props> = ({count,  grade, subject, chapter, lu, lu_n
                         speedMultiplier={1}
                     />
                 </div>
+            )}
+
+            <div style={{ position: 'relative', zIndex: 0, filter: loading ? 'blur(5px)' : 'none', }}>
+                <div className="col-md-12 mt-5">
+                    <h2 className="text-center">
+                        Please select
+                        <span className="fw-bold"> Grade</span>,
+                        <span className="fw-bold"> Subject</span>,
+                        <span className="fw-bold"> Chapter </span>, and
+                        other details
+                        to generate MCQs
+                    </h2>
+                </div>
+
+                <div className="row mb-2">
+                    <div className="col-md-1"></div>
+                    <div className="col-md-10 d-flex justify-content-center py-2 mt-4">
+                        <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '150px' }} value={grade} onChange={fetchSubjects} >
+                            <option value="" disabled >Pick a grade</option>
+                            {[...grades].map((grade_list, index) => (
+                                <option key={index}>{grade_list ? grade_list : grade}</option>
+                            ))}
+                        </select>
+
+                        <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '260px' }} value={subject} onChange={fetchChapters} >
+                            <option value="" disabled >Pick one of the given subjects</option>
+                            {subjects.map((subject_list, index) => (
+                                <option key={index}>{subject_list ? subject_list : subject}</option>
+                            ))}
+                        </select>
+
+                        <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '252px' }} value={chapter} onChange={fetchLUs} >
+                            <option value="" disabled >Pick from the given chapters</option>
+                            {chapters.map((chapter_list, index) => (
+                                <option key={index}>{chapter_list ? chapter_list : chapter}</option>
+                            ))}
+                        </select>
+
+                        <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '235px' }} value={lu} onChange={setLUID} >
+                            <option value="" disabled>Pick from the given Topics</option>
+                            {lus.map((lu, index) => (
+                                <option key={index} value={lu.id}>
+                                    {lu.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="col-md-1"></div>
+                </div>
+                <div className="row mt-1">
+                    <div className="col-md-1"></div>
+                    <div className="col-md-10 d-flex justify-content-center">
+                        <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '250px' }} value={bloom} onChange={setBloomLevel} >
+                            <option value="" disabled >Pick from the given Bloom's Levels</option>
+                            {blooms.map((bloom, index) => (
+                                <option key={index} value={bloom}>{bloom}</option>
+                            ))}
+                        </select>
+
+                        <input className="btn border border-primary mx-3" style={{ maxWidth: '260px' }} placeholder="Questions to generate (1 - 10)" value={count} type="text" name="count" id="count" onChange={setCount} />
+                    </div>
+                    <div className="col-md-1"></div>
+                </div>
+
+                {/* <div className="row mt-4">
+                <div className="col-md-5"> <hr /> </div>
+                <div className="col-md-2">
+                    <h3 className="text-center">OR</h3>
+                </div>
+                <div className="com-md-5"> <hr /> </div>
+            </div> */}
+
+                {/* <div className="row d-flex justify-content-center mt-4">
+                <label htmlFor="qID" style={{maxWidth: '265px'}}> <p className="fw-bold m-0 p-0">Question ID</p>
+                    <input className="form-control" type="text" name="qID" id="qID" placeholder="Enter thge 'Question ID' Here" />
+                </label>
+            </div> */}
+
+                <div className="row d-flex justify-content-center mt-3">
+                    <button type="button" className="btn btn-primary me-3" style={{ width: '125px' }} disabled={isDisabled} onClick={handleSubmit}>
+                        Submit
+                    </button>
+                    <button className="btn btn-primary btn-sm float-end ms-2" style={{ width: '125px' }} disabled={isGenerateDisabled} onClick={generateQuestions}>
+                        GENERATE
+                    </button>
+                    {/* <button className="btn btn-primary btn-sm float-end ms-2" style={{ width: '125px' }} disabled={isGenerateDisabled || showIt} onClick={generateQuestions}>
+                    GENERATE
+                </button> */}
+                </div>
+
+
+                <div className="row mt-4 d-flex">
+                    {/* <div className="radio"> */}
+
+                    {/* </div> */}
+                    {/* <input type="radio" name="typeOfQuestionsBasedOnReview" id="typeOfQuestionsBased" value={"not_reviewed"} />
+                <label htmlFor="typeOfQuestionsBasedOnReview">HTML</label> */}
+                    {/* <label className="d-inline-flex">
+                    <input type="radio" value="not_reviewed" checked={selectedOption === "not_reviewed"} onChange={handleOptionChange}/>
+                    For Review
+                </label>
+                <label className="d-inline-flex">
+                    <input type="radio" value="accepted" checked={selectedOption === "accepted"} onChange={handleOptionChange} />
+                    Accepted
+                </label>  */}
+                </div>
+                <div className="row mt-3 d-flex justify-content-center">
+                    <div className="col-md-10 mb-2" style={{ backgroundColor: '#f9f9f9' }}>
+                        Questions for Topic: &nbsp; <strong> {lu_name} </strong>
+                        <hr />
+                        {viewQues.map((question, index) => (
+                            <div className="row" key={index}>
+                                {/* Questions for LU: <strong> {lu} </strong> */}
+                                <div className="col-md-12 my-2">
+                                    Que {index + 1}: &nbsp; {question.question} &nbsp; &nbsp;
+                                    <button className="btn btn-primary btn-sm float-end" value={index} onClick={() => viewQuestion(index)}>
+                                        VIEW
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
             </div>
 
         </div>
