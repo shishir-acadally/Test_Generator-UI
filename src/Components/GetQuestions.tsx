@@ -222,7 +222,7 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
                     // if (questions.length === 0) { handleSubmit(); }
                     // setQues([]);
                     // setviewQues([]);
-                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
+                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom: "", question: questions, viewQue: viewQues });
                     // console.log("LUs: ", data.learning_units);
                 })
                 .catch((error: any) => {
@@ -304,12 +304,12 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
     const fetchSubjects = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedGrade = event.target.value;
         
-        onUpdateState({ count, grade: selectedGrade, subject, chapter:"", lu:"", lu_name:"", bloom, question, viewQue });
+        onUpdateState({ count, grade: selectedGrade, subject, chapter:"", lu:"", lu_name:"", bloom: "", question, viewQue });
     };
 
     const fetchChapters = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedSubject = event.target.value;
-        onUpdateState({ count, grade, subject: selectedSubject, chapter:"", lu:"", lu_name:"", bloom, question, viewQue });
+        onUpdateState({ count, grade, subject: selectedSubject, chapter:"", lu:"", lu_name:"", bloom: "", question, viewQue });
     };
 
     const setLUID = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -329,7 +329,7 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
         // setviewQues([]);
         // console.log("final print .................");
         setviewQues([]);
-        onUpdateState({ count, grade, subject, chapter, lu: tempLU, lu_name: tempLU_name, bloom, question: questions, viewQue: viewQues });
+        onUpdateState({ count, grade, subject, chapter, lu: tempLU, lu_name: tempLU_name, bloom:"", question: questions, viewQue: viewQues });
         // if (bloom !== "") {
         //     console.log("========================= Blooms: ", bloom);
         //     if (viewQues.length === 0){
@@ -347,7 +347,7 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
     const fetchLUs = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedChapter = event.target.value;
         // setSubjecttest(selectedChapter);
-        onUpdateState({ count, grade, subject, chapter: selectedChapter, lu, lu_name, bloom, question, viewQue });
+        onUpdateState({ count, grade, subject, chapter: selectedChapter, lu, lu_name, bloom:"", question, viewQue });
     };
 
     const setBloomLevel = (event: any) => {
@@ -386,11 +386,11 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
                     }
                     setQues([]);
                     setviewQues([]);
-                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
+                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom: "", question: questions, viewQue: viewQues });
                 } else {
                     setQues(data.data);
                     console.log("After setting questions: ", data.data);
-                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom, question: data.data, viewQue });
+                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom: "", question: data.data, viewQue });
                     let tempViewQUes = [];
                     let tempQues = [];
                     for (let que_det of data.data) {
@@ -415,7 +415,7 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
                     // temp1.push({ 'question': data.data[0].Question })
                     setviewQues(tempViewQUes);
                     setQues(tempQues);
-                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom, question, viewQue: viewQues });
+                    onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom:"", question, viewQue: viewQues });
                     setIsGenerateDisabled(false);
                     // console.log("Questions:", viewQues);
                 }
