@@ -3,7 +3,6 @@ import "../App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "katex/dist/katex.min.css";
-// import LatexRenderer from './LatexRenderer';
 import RenderInline from "./RenderInline";
 import Swal from "sweetalert2";
 

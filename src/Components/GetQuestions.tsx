@@ -74,7 +74,8 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
     const [subjects, setSubjects] = useState<string[]>([]);
     const [chapters, setChapters] = useState<string[]>([]);
     const [lus, setLus] = useState<{ id: string; name: string; }[]>([]);
-    const [selectedLU, setSelectedLU] = useState("");
+    // const [selectedLU, setSelectedLU] = useState("");
+    let selectedLU = "";
     const blooms = ["Remember", "Understand"];
     const [viewQues, setviewQues] = useState<{ question: string; }[]>([]);
     const [questions, setQues] = useState<{
@@ -218,7 +219,7 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
                     setLus(temp);
                     // setBlooms(["Remember", "Understand", "Apply", "Analyse"]);
 
-                    if (questions.length === 0) { handleSubmit(); }
+                    // if (questions.length === 0) { handleSubmit(); }
                     // setQues([]);
                     // setviewQues([]);
                     onUpdateState({ count, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue: viewQues });
@@ -302,32 +303,41 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
 
     const fetchSubjects = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedGrade = event.target.value;
-        onUpdateState({ count, grade: selectedGrade, subject, chapter, lu, lu_name, bloom, question, viewQue });
+        
+        onUpdateState({ count, grade: selectedGrade, subject, chapter:"", lu:"", lu_name:"", bloom, question, viewQue });
     };
 
     const fetchChapters = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedSubject = event.target.value;
-        onUpdateState({ count, grade, subject: selectedSubject, chapter, lu, lu_name, bloom, question, viewQue });
+        onUpdateState({ count, grade, subject: selectedSubject, chapter:"", lu:"", lu_name:"", bloom, question, viewQue });
     };
 
     const setLUID = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const tempLU = event.target.value;
-        setSelectedLU(tempLU);
-        console.log("LU select: ", tempLU);
+        console.log("In set lu ======================>", tempLU);
+        // setSelectedLU(tempLU);
+        selectedLU = tempLU;
+        console.log("LU select: ", selectedLU);
         let tempLU_name: string = "";
         lus.map((lu, _) => {
             if (lu.id === tempLU) {
                 tempLU_name = lu.name;
+                console.log("===========In setluid, lu_name: ", tempLU_name);
             }
         });
         // setQues([]);
         // setviewQues([]);
         // console.log("final print .................");
+        setviewQues([]);
         onUpdateState({ count, grade, subject, chapter, lu: tempLU, lu_name: tempLU_name, bloom, question: questions, viewQue: viewQues });
-        if (bloom !== "") {
-            console.log("========================= Blooms: ", bloom);
-            setIsDisabled(false);
-        }
+        // if (bloom !== "") {
+        //     console.log("========================= Blooms: ", bloom);
+        //     if (viewQues.length === 0){
+        //         handleSubmit();
+        //     }
+        //     setIsDisabled(false);
+        // }
+        
         // getLearningOutcomes(tempLU);
         // setBlooms(["Remember", "Understand", "Apply", "Analyse"]);
         // onUpdateState({ grade, subject, chapter, lu: selectedLU , question, viewQue});
@@ -349,6 +359,7 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
 
     const setCount = (event: any) => {
         const countValue = event.target.value;
+        setIsGenerateDisabled(false);
         onUpdateState({ count: countValue, grade, subject, chapter, lu, lu_name, bloom, question: questions, viewQue })
     }
 
@@ -368,8 +379,7 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
 
                     if (lu !== "" || bloom !== "") {
                         const MySwal = withReactContent(Swal)
-                        MySwal.fire(<p>No Question Found in the DataBase. Please Click on "Generate" button to generate it!</p>)
-                        setIsGenerateDisabled(false);
+                        MySwal.fire(<pre>Data generated wih an issue. Please review!</pre>);
                     }
                     else {
                         setIsGenerateDisabled(true);
@@ -399,7 +409,7 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
 
                     if (tempQues.length < 1) {
                         const MySwal = withReactContent(Swal)
-                        MySwal.fire(<p>No Question Found in the DataBase. Please Click on "Generate" button to generate it!</p>)
+                        MySwal.fire(<p>Data generated wih an issue. Please review!</p>)
                         setIsGenerateDisabled(false);
                     }
                     // temp1.push({ 'question': data.data[0].Question })
@@ -511,7 +521,12 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
                                 <option key={index}>{chapter_list ? chapter_list : chapter}</option>
                             ))}
                         </select>
-
+                    </div>
+                    <div className="col-md-1"></div>
+                </div>
+                <div className="row mt-1">
+                    <div className="col-md-1"></div>
+                    <div className="col-md-10 d-flex justify-content-center">
                         <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '235px' }} value={lu} onChange={setLUID} >
                             <option value="" disabled>Pick from the given Topics</option>
                             {lus.map((lu, index) => (
@@ -520,12 +535,7 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
                                 </option>
                             ))}
                         </select>
-                    </div>
-                    <div className="col-md-1"></div>
-                </div>
-                <div className="row mt-1">
-                    <div className="col-md-1"></div>
-                    <div className="col-md-10 d-flex justify-content-center">
+
                         <select className="btn dropdown-toggle border border-primary mx-3" style={{ maxWidth: '250px' }} value={bloom} onChange={setBloomLevel} >
                             <option value="" disabled >Pick from the given Bloom's Levels</option>
                             {blooms.map((bloom, index) => (
@@ -533,7 +543,7 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
                             ))}
                         </select>
 
-                        <input className="btn border border-primary mx-3" style={{ maxWidth: '260px' }} placeholder="Questions to generate (1 - 10)" value={count} type="text" name="count" id="count" onChange={setCount} />
+                        {/* <input className="btn border border-primary mx-3" style={{ maxWidth: '260px' }} placeholder="Questions to generate (1 - 10)" value={count} type="text" name="count" id="count" onChange={setCount} /> */}
                     </div>
                     <div className="col-md-1"></div>
                 </div>
@@ -556,9 +566,9 @@ const GetQuesPage: React.FC<Props> = ({ count, grade, subject, chapter, lu, lu_n
                     <button type="button" className="btn btn-primary me-3" style={{ width: '125px' }} disabled={isDisabled} onClick={handleSubmit}>
                         Submit
                     </button>
-                    <button className="btn btn-primary btn-sm float-end ms-2" style={{ width: '125px' }} disabled={isGenerateDisabled} onClick={generateQuestions}>
+                    {/* <button className="btn btn-primary btn-sm float-end ms-2" style={{ width: '125px' }} disabled={isGenerateDisabled} onClick={generateQuestions}>
                         GENERATE
-                    </button>
+                    </button> */}
                     {/* <button className="btn btn-primary btn-sm float-end ms-2" style={{ width: '125px' }} disabled={isGenerateDisabled || showIt} onClick={generateQuestions}>
                     GENERATE
                 </button> */}
