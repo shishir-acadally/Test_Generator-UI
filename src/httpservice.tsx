@@ -159,13 +159,6 @@ export const getChapQuestions = (grade: string, chapter: string) => {
 
 // ------------------------------------------------ OPENAI APIs ------------------------------------------------
 
-const openai = new OpenAI({
-  // apiKey: process.env.REACT_APP_OPENAI_API_KEY,
-  apiKey: "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",
-  dangerouslyAllowBrowser: true,
-  // baseURL: "https://api.anthropic.com/v1/"
-});
-
 export const generateQuestions = async (
   board: string,
   grade: string,
@@ -175,6 +168,11 @@ export const generateQuestions = async (
   bloom: string,
   signal?: AbortSignal
 ) => {
+  const openai = new OpenAI({
+    apiKey: process.env.REACT_APP_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true,
+  });
+
   const prompt = `Generate 5 multiple choice questions for:
     Board: ${board}
     Grade: ${grade} 
