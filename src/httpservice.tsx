@@ -161,7 +161,7 @@ export const getChapQuestions = (grade: string, chapter: string) => {
 
 const openai = new OpenAI({
   // apiKey: process.env.REACT_APP_OPENAI_API_KEY,
-  apiKey: "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",
+  apiKey: "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",
   dangerouslyAllowBrowser: true,
   // baseURL: "https://api.anthropic.com/v1/"
 });
@@ -185,7 +185,8 @@ export const generateQuestions = async (
 
     ## INSTRUCTIONS
     - All the questions should be specific to the given topic.
-    - All questions should be different from each other. No question should be similar to another.s
+    - All questions should be different from each other. No question should be similar to another.
+    - Generate different type of questions like Fill ups, Assertion Reasoning, Match the following, Which of the following statements, etc.
     - All the data should be in British English.
     - All the data should be in latex format. All mathematical symbols, terms, equations, expressions, etc. should be wrapped in '\\\\(' and '\\\\)' for inline latex.
     - Use '<br />' for line breaks.
