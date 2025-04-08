@@ -256,7 +256,7 @@ const App: React.FC = () => {
 
           <Routes>
             
-            <Route
+            {/* <Route
               path='/'
               element={
                 !sessionStorage.getItem('userLoggedIn') ? (
@@ -265,9 +265,9 @@ const App: React.FC = () => {
                   <Navigate to="/cri" />
                 )
               }
-            />
+            /> */}
             <Route
-              path='/cri'
+              path='/'
               element={
                 (
                   <div className="col-lg-12">
@@ -318,14 +318,14 @@ const App: React.FC = () => {
                 </div>)
               }
             />  
-            <Route
+            {/* <Route
               path='/cki'
               element= {
                 (<div className='dashboard mt-5'>
                   <Layout />
                 </div>)
               }
-            /> 
+            />  */}
             {/*
             <Route
               path='/generate-questions'
