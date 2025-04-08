@@ -1,0 +1,36 @@
+/* src/ChapterSelection.css */
+
+.chapter-selection {
+    margin: 20px 0;
+    width: 70%;
+  }
+  
+  .chapter-selection h3 {
+    font-size: 1.2rem;
+  }
+  
+  .chapter-selection input {
+    width: 92%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .chapter-suggestions {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .chapter-suggestions li {
+    cursor: pointer;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 5px 0;
+  }
+  
+  .chapter-suggestions li:hover {
+    background-color: #f0f0f0;
+  }
+  

@@ -1,0 +1,70 @@
+/* src/components/LearningUnitSelection.css */
+
+.learning-unit-selection {
+  display: flex;
+  flex-direction: column; /* Changed from row to column */
+  align-items: center; /* Centering content */
+  margin-right: 25px;
+  width: 450px; /* Adjusted width */
+  /* margin: auto; Centering in the viewport */
+}
+
+.learning-unit-selection div {
+  width: 100%; /* Full width to contain the list and button neatly */
+}
+
+.learning-unit-selection ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%; /* Adjusted to full width of its container */
+  overflow-y: scroll;
+  height: 97vh; /* Adjusted for better viewability */
+}
+
+.learning-unit-selection ul li:hover {
+  background-color: #e6e6e6;
+}
+
+ul li {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 5px;
+  word-wrap: break-word;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s;
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.selected-item {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.placeholder {
+  color: #888;
+  font-style: italic;
+}
+
+.toggle-button {
+  padding: 10px 20px;
+  width: 250px;
+  margin-bottom: 20px; /* Adding some margin below the button */
+  font-size: 1rem;
+  background-color: #0056b3; /* Bootstrap primary color for familiarity */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.toggle-button:hover {
+  background-color: #07407c; /* Darker shade on hover */
+}

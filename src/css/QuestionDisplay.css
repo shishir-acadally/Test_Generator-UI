@@ -1,0 +1,32 @@
+/* src/components/QuestionDisplay.css */
+
+.question-display {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.question-display h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.question-display p {
+  margin: 5px 0;
+}
+
+.question-display img {
+  max-width: 100%;
+  margin: 10px 0;
+}
+
+.question-display ul {
+  list-style: none;
+  padding: 0;
+}
+
+.question-display li {
+  margin: 5px 0;
+}

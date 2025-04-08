@@ -1,0 +1,65 @@
+/* src/css/learning-outcomes.css */
+
+.learning-outcomes {
+    position: relative;
+    top: -135px;
+    margin-top: 20px;
+    max-width: 15vw;
+  }
+  
+  .learning-outcomes h3 {
+    color: #333;
+    margin-top: 0;
+  }
+  
+  .learning-outcomes ul {
+    overflow: scroll;
+    height: 97vh;
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .learning-outcomes li {
+    cursor: pointer;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+  }
+  
+  .learning-outcomes li:hover {
+    background-color: #e0e0e0;
+  }
+/*   
+  .edits-section {
+    margin-top: 20px;
+    min-height: 140px; */
+
+  /* } */
+  
+  .edits-section label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .edits-section textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+  
+  .edits-section button {
+    padding: 10px 15px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .edits-section button:hover {
+    background-color: #45a049;
+  }
+  

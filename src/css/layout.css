@@ -1,0 +1,214 @@
+/* src/Layout.css */
+
+.layout {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 80px);
+}
+
+.user-controls {
+  flex: 1;
+  max-width: 450px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+}
+
+.header {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.welcome-message {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.clone-feature {
+  display: flex;
+  gap: 1rem;
+}
+
+.header-button {
+  background-color: #e3f2fd;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.header-button:hover {
+  background-color: #fff;
+  transform: translateY(-1px);
+}
+
+.header-button:active {
+  box-shadow: #422800 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+.HUD {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.HUD h3 {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: #495057;
+}
+
+.question-display {
+  flex: 2;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+}
+
+.side-by-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.setClone {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #e9ecef;
+}
+
+.setClone h3 {
+  color: #212529;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.clone-button {
+  width: 100px;
+  padding: 0.5rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.clone-button.active {
+  background-color: #ffffcc;
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  flex: 0.15; /* Allocates 30% of the space to the IDs, reducing its width */
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  flex: 0.85; /* Allocates 70% of the space to the Names, increasing its width */
+}
+
+h3 {
+  margin: 4px 0; /* Reduces space between h3 elements for compactness */
+  font-size: 1rem; /* Adjust size as needed */
+}
+
+.addClone {
+  position: absolute;
+  right: 200px;
+  background-color: #e3f2fd;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 0 18px;
+  line-height: 40px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.addClone:hover {
+  background-color: #fff;
+}
+
+.addClone:active {
+  box-shadow: #422800 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .addClone {
+    min-width: 120px;
+    padding: 0 25px;
+  }
+}
+
+.downloadClone {
+  position: absolute;
+  right: 40px;
+  background-color: #e3f2fd;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 0 18px;
+  line-height: 40px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.downloadClone:hover {
+  background-color: #fff;
+}
+
+.downloadClone:active {
+  box-shadow: #422800 2px 2px 0 0;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .downloadClone {
+    min-width: 120px;
+    padding: 0 25px;
+  }
+}
+
+.modal {
+  border-color: #f0f0f0;
+  border-style: solid;
+  border-radius: 5px;
+  height: 50px;
+}

@@ -1,0 +1,85 @@
+/* src/QuestionList.css */
+
+.question-list {
+  /* margin: 20px 0; */
+  padding: 0 15px 0 0;
+  width: 20vw;
+
+}
+
+.question-list h3 {
+  font-size: 1.2rem;
+}
+.question-list-ul {
+  overflow-y: scroll;
+  height: 100vh;
+}
+.question-list ul {
+  list-style: none;
+  
+  padding: 0;
+}
+.question-list-ul ul {
+  display: flex;
+}
+/* Add the following CSS styles to create a three-column layout for clone questions */
+.question-list-ul ul{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+}
+
+.question-list-ul ul li  {
+  min-width: 35px;
+
+  width: calc(33.33% - 10px); /* Adjust the width as needed */
+  margin: 5px;
+  border: 1px solid #ccc; /* Add borders or styles as desired */
+  padding: 10px;
+}
+
+
+.question-list li {
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 5px 0;
+  min-width: 240px;
+  /* display: flex; */
+  align-items: center;
+}
+
+/* Style OG (Main) questions differently */
+.question-list li:not(:hover) {
+  background-color: #f9f9f9;
+}
+
+/* Style clone questions */
+.question-list ul {
+  list-style: none;
+  /* width: 100%; */
+  /* padding: 0 0 0 20px; */
+}
+
+
+/* Hover effect for both main and clone questions */
+.question-list li li:hover {
+  background-color: #e6e6e6;
+}
+
+.question-list-ul li.highlighted {
+  background-color: #ffffcc; /* You can customize the background color */
+  font-weight: bold;
+}
+
+.question-list-ul li.review {
+  background-color: #ee3030; /* You can customize the background color */
+  font-weight: bold;
+}
+/* Add a pointer cursor on hover */
+.question-list li:hover, .question-list ul li:hover {
+  cursor: pointer;
+}
